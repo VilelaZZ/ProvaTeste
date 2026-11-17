@@ -1,0 +1,25 @@
+
+# Java / Spring Boot
+backend/target/
+*.class
+*.log
+
+# Angular
+frontend-web/node_modules/
+frontend-web/dist/
+frontend-web/.angular/
+
+# Expo
+frontend-mobile/node_modules/
+frontend-mobile/.expo/
+frontend-mobile/dist/
+
+# Configurações locais
+.env
+.env.local
+.idea/
+.vscode/
+
+# Sistema
+.DS_Store
+Thumbs.db
