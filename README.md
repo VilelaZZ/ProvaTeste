@@ -157,54 +157,6 @@ Para executar no celular:
 3. Execute `npx expo start` no terminal.
 4. Escaneie o QR Code exibido pelo Expo utilizando o Expo Go.
 
-## 5. Configuração de rede para acessar a API pelo celular
-
-Quando o aplicativo é executado em um celular físico, o endereço `localhost` não representa o computador. Ele representa o próprio dispositivo.
-
-Por isso, é necessário utilizar o endereço IP local do computador onde o backend está sendo executado.
-
-### Descobrir o IP do computador
-
-No Windows, abra o terminal e execute:
-
-```bash
-ipconfig
-```
-
-Procure pelo endereço IPv4 da conexão Wi-Fi. Exemplo:
-
-```text
-192.168.1.100
-```
-
-### Configurar a URL da API
-
-Dentro da pasta `frontend-mobile`, crie um arquivo chamado `.env`:
-
-```env
-EXPO_PUBLIC_API_URL=http://192.168.1.100:8080
-```
-
-Substitua `192.168.1.100` pelo endereço IPv4 real do computador.
-
-Depois, reinicie o Expo:
-
-```bash
-npx expo start --clear
-```
-
-### Atenção às configurações de rede
-
-Para que o celular consiga acessar o backend:
-
-- O computador e o celular devem estar conectados à mesma rede Wi-Fi.
-- O backend deve estar em execução na porta `8080`.
-- O Firewall do Windows deve permitir conexões de entrada na porta `8080`.
-- O endereço IP configurado no `.env` deve ser o IP local correto do computador.
-- Caso o IP do computador mude, atualize o arquivo `.env`.
-
-Se necessário, permita o acesso do Java pelo Firewall do Windows para redes privadas.
-
 ### Endereços utilizados conforme o ambiente
 
 | Ambiente | URL da API |
