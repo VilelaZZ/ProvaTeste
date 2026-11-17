@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "frontend-mobile",
-    "slug": "frontend-mobile",
+    "name": "TaskFlow",
+    "slug": "taskflow",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "frontendmobile",
+    "scheme": "taskflow",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"
