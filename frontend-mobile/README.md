@@ -1,56 +1,51 @@
-# Welcome to your Expo app 👋
+# TaskFlow (mobile)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+App Expo (React Native + expo-router) que lista tarefas, mostra os detalhes e altera o status
+consumindo a API Java via Axios.
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Rodando
 
 ```bash
-npm run reset-project
+npm install
+cp .env.example .env      # ajuste EXPO_PUBLIC_API_URL (veja abaixo)
+npx expo start -c
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+## Telas e navegação
 
-### Other setup steps
+| Rota          | Arquivo                    | O que faz                                              |
+| ------------- | -------------------------- | ------------------------------------------------------ |
+| `/`           | `src/app/index.tsx`        | Lista, filtro por status, progresso, puxar p/ atualizar |
+| `/tasks/[id]` | `src/app/tasks/[id].tsx`   | Detalhes + alteração de status                          |
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Navegação: `Link` (lista → detalhes), botão voltar do header e `router.replace('/')` como saída
+quando não há tela anterior. A lista recarrega ao voltar dos detalhes (`useFocusEffect`).
 
-## Learn more
+## 🔌 Onde conectar o backend
 
-To learn more about developing your project with Expo, look at the following resources:
+Procure por `🔌 BACKEND` no código. São só 3 arquivos:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+1. **`.env`** → `EXPO_PUBLIC_API_URL` (URL base da API).
+2. **`src/services/tasks.ts`** → caminhos dos endpoints, campos do JSON (`TaskDto`) e `mapTask`.
+3. **`src/constants/task-status.ts`** → nomes do enum de status do Java (`API_STATUS`).
 
-## Join the community
+Contrato assumido (ajustável nos arquivos acima):
 
-Join our community of developers creating universal apps.
+| Ação              | Requisição                                  | Resposta                                   |
+| ----------------- | ------------------------------------------- | ------------------------------------------ |
+| Listar            | `GET /tasks`                                | `[Task]` ou página Spring `{ content: [] }` |
+| Detalhar          | `GET /tasks/{id}`                           | `Task`                                      |
+| Alterar status    | `PATCH /tasks/{id}/status` `{ "status" }`   | `Task` atualizada (ou `204`)                |
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```json
+{ "id": 1, "title": "Escrever relatório", "description": "…", "status": "IN_PROGRESS",
+  "createdAt": "2026-11-17T10:00:00", "dueDate": "2026-11-20" }
+```
+
+## Dicas de rede
+
+- Celular físico: use o IP da máquina (não `localhost`) e a mesma rede Wi-Fi.
+- Emulador Android: `http://10.0.2.2:8080`.
+- Spring Boot precisa de CORS liberado apenas para a versão **web** do Expo.
+- Build de produção Android bloqueia `http://`: use HTTPS ou habilite `usesCleartextTraffic`
+  (`expo-build-properties`).

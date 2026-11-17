@@ -1,18 +1,33 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from 'react-native';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { Colors } from '@/constants/theme';
 
-SplashScreen.preventAutoHideAsync();
-
-export default function TabLayout() {
+/**
+ * Navegação do TaskFlow (pilha):
+ *   /            → src/app/index.tsx       (lista de tarefas)
+ *   /tasks/[id]  → src/app/tasks/[id].tsx  (detalhes + alterar status)
+ */
+export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const dark = colorScheme === 'dark';
+  const colors = Colors[dark ? 'dark' : 'light'];
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+    <ThemeProvider value={dark ? DarkTheme : DefaultTheme}>
+      <StatusBar style="auto" />
+      <Stack
+        screenOptions={{
+          headerStyle: { backgroundColor: colors.background },
+          headerTintColor: colors.text,
+          headerShadowVisible: false,
+          headerTitleStyle: { fontWeight: '700' },
+          contentStyle: { backgroundColor: colors.background },
+        }}>
+        <Stack.Screen name="index" options={{ title: 'TaskFlow' }} />
+        <Stack.Screen name="tasks/[id]" options={{ title: 'Detalhes da tarefa' }} />
+      </Stack>
     </ThemeProvider>
   );
 }
